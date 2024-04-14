@@ -7,7 +7,7 @@ from data_processing import (
 from feature_engineering import bin_to_num, cat_to_col, one_hot_encoding
 
 ingest_data = IngestData()
-df = ingest_data.get_data("OLSREGRESSIONCHALLENGE/ols-regression-challenge-data/data/cancer_reg.csv") 
+df = ingest_data.get_data("regression-data/data/cancer_reg.csv") 
 
 constant_columns = find_constant_columns(df)
 print("Columns that contain a single value: ", constant_columns)
@@ -20,4 +20,4 @@ df = cat_to_col(df)
 df = one_hot_encoding(df)
 df = drop_and_fill(df)
 print(df.shape)
-df.to_csv("OLSREGRESSIONCHALLENGE/ols-regression-challenge-data/data/cancer_reg.csv", index=False)
+df.to_csv("regression-data/data/cancer_reg.csv", index=False)
