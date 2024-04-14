@@ -1,10 +1,10 @@
- ### OLS Regression Challenge
+ ### Regression Challenge
 
 **Problem Statement**:- Predict cancer mortality rates for US counties.
 
 **Background**:-These data were aggregated from a number of sources including the American Community Survey (census.gov), clinicaltrials.gov, and cancer.gov. Most of the data preparation process can be veiwed here.
 
-**Your Task:** Build a multivariate Ordinary Least Squares regression model to predict "TARGET_deathRate"
+**Task:** Build a multivariate Ordinary Least Squares regression model to predict "TARGET_deathRate"
 
 **Deliverables:-**
 
