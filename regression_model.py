@@ -42,7 +42,7 @@ def identify_significant_vars(lr, p_value_threshold=0.05):
 
 
 if __name__ == "__main__":
-    capped_data = pd.read_csv("OLS REGRESSION CHALLENGE\ols-regression-challenge-data\capped_data.csv")
+    capped_data = pd.read_csv("regression-data\capped_data.csv")
     print(capped_data.shape)
     # select cols wihch has more than 3 unique values
     # cols = capped_data.nunique()[capped_data.nunique() > 3].keys().tolist()
