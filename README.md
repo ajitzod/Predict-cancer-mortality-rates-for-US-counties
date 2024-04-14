@@ -6,11 +6,6 @@
 [[Project Planning](#planning)]
 [[Key Findings](#findings)]
 [[Data Dictionary](#dictionary)]
-[[Data Acquire and Prep](#wrangle)]
-[[Data Exploration](#explore)]
-[[Statistical Analysis](#stats)]
-[[Modeling](#model)]
-[[Conclusion](#conclusion)]
 ___
 
 
@@ -24,18 +19,16 @@ Using the data science pipeline to practice with regression. In this repository 
 [[Back to top](#top)]
 
 ### Project Outline:
-- Create README.md with data dictionary, project goals, come up with questions to lead the exploration and the steps to reproduce.
-- Acquire data from data.world and automate it in a function, and store the function in the wrangle.py module.
-- Clean and prepare data for exploration. Create a function to automate the process, store the function in the wrangle.py module, and prepare data in Final Report Notebook by importing and using the funtion.
-- Produce at least 6 clean and easy to understand visuals.
-- Clearly define hypotheses, set an alpha, run the statistical tests needed, reject or fail to reject the Null Hypothesis, and document findings and takeaways.
-- Scale the data for modeling.
-- Establish a baseline accuracy.
-- Train three different regression models.
-- Evaluate models on train and validate datasets.
-- Choose the model with that performs the best and evaluate that single model on the test dataset.
-- Document conclusions, takeaways, and next steps in the Final Report Notebook.
-
+- Data Ingestion:-
+Implemented a class IngestData to handle data ingestion. Defined a method get_data to read the CSV file and return it as a DataFrame.
+- Data Preprocessing:-
+Identified and deleted constant columns using find_constant_columns and delete_constant_columns functions. Detected columns with a small number of unique values using find_columns_with_few_values function. Removed duplicate rows using find_duplicate_rows and delete_duplicate_rows functions. Dropped columns with more than 50% missing values and filled remaining missing values with the mean of the column using drop_and_fill function.
+- Feature Engineering:-
+Transformed specific columns from string representations into numerical features using bin_to_num and cat_to_col functions. One-hot encoded categorical features using the one_hot_encoding function.
+- Exploratory Data Analysis (EDA):-
+Conducted EDA to explore the data, identify missing values, outliers, and understand the distribution of features. Handled missing values, outliers, and other data anomalies as necessary.
+- Building Regression Model:-
+Loaded the preprocessed data. Implemented functions for correlation analysis among numeric features, linear regression model building, and identifying significant variables. Trained the linear regression model using sm.OLS from the statsmodels library. Identified significant variables based on p-values.Refined the model by training it only on significant variables. Evaluated the model's performance using metrics like R-squared, adjusted R-squared, and examined the summary statistics.
 
 ### Project goals: 
 - My goal is to find key features of lung cancer mortality rate and use them to predict it with the least amount of error.
@@ -52,16 +45,6 @@ Using the data science pipeline to practice with regression. In this repository 
 - Is there a relationship between Deathrate and Median Age?
 - Does a specific age bin have affect the deathrate?
 - How many people that died from cancer were diagnosed?
-
-### Need to haves (Deliverables):
-- A final report notebook
-- A README
-
-
-### Nice to haves (With more time):
-- If I had more time with the data I would implement clustering to see if I can impove the models performance.
-- I would also pull more of the raw data to see if I could feature engineer more columns.
-
 
 ## <a name="findings"></a>Key Findings:
 [[Back to top](#top)]
@@ -120,174 +103,3 @@ Using the data science pipeline to practice with regression. In this repository 
 | BirthRate| Number of live births relative to number of women in county (b) | float64 |
 | AgeBin| MedianAge binned into 3 parts, young, mid-aged, old | category |
 ***
-
-## <a name="wrangle"></a>Data Acquisition and Preparation
-[[Back to top](#top)]
-
-![]()
-
-
-### Prepare steps: 
-- Dropped columns not needed
-- Removed ouliers
-- Imputed nulls with mean for PctEmployed16_Over
-- Replaced outliers for MedianAge, MedianAgeMale, MedianAgeFemale that were over 100 years
-- Used MedianAge to make a new column with 3 age bins
-- Split into the train, validate, and test sets
-- Scaled the data to be used later in modeling
-
-*********************
-
-## <a name="explore"></a>Data Exploration:
-[[Back to top](#top)]
-- Python files used for exploration:
-    - wrangle.py
-    - explore.py
-    - model.py
-
-
-### Takeaways from exploration:
-- Only 1/3 of the people diagnosed actually died.
-- The Mid-Aged bin has a slightly higher average deathrate then young or old does.
-- The red binned [22640, 34218.1] income has more counties with extreme levels of deathrate.
-- The blue binned (61494.5, 125635] income has a majority of their counties below the average deathrate.
-***
-
-## <a name="stats"></a>Statistical Analysis
-[[Back to top](#top)]
-
-### Stats Test 1: PearsonR
-
-
-#### Hypothesis:
-- The null hypothesis (H<sub>0</sub>) is: There is no relationship between deathrate and incidence rate.
-- The alternate hypothesis (H<sub>1</sub>) is: There is a relationship between deathrate and incidence rate.
-
-#### Confidence level and alpha value:
-- I established a 95% confidence level
-- alpha = 1 - confidence, therefore alpha is 0.05
-
-#### Results:
-- Correlation: 0.44
-- P-value: 6.73e-83
-- We reject the null hypothesis that There is no relationship between the Deathrate and Incidence Rate.
-- There is a relationship between the Deathrate and Incidence Rate.
-
-
-### Stats Test 2: PearsonR
-
-
-#### Hypothesis:
-- The null hypothesis (H<sub>0</sub>) is: There is no relationship between deathrate and poverty percent.
-- The alternate hypothesis (H<sub>1</sub>) is: There is a relationship between deathrate and poverty percent.
-
-#### Confidence level and alpha value:
-- I established a 95% confidence level
-- alpha = 1 - confidence, therefore alpha is 0.05
-
-
-#### Results:
-- Correlation: 0.42
-- P-value: 1.14e-72
-- We reject the null hypothesis that There is no relationship between the Deathrate and Poverty Percent.
-- There is a relationship between the Deathrate and Poverty Percent.
-
-
-### Stats Test 3: PearsonR
-
-
-#### Hypothesis:
-- The null hypothesis (H<sub>0</sub>) is: There is no relationship between deathrate and median age.
-- The alternate hypothesis (H<sub>1</sub>) is: There is a relationship between deathrate and median age.
-
-#### Confidence level and alpha value:
-- I established a 95% confidence level
-- alpha = 1 - confidence, therefore alpha is 0.05
-
-
-#### Results:
-- Correlation: -0.0066
-- P-value: 0.78
-- We fail to reject the null hypothesis that There is no relationship between the Deathrate and Median Age.
-
-
-***
-
-## <a name="model"></a>Modeling:
-[[Back to top](#top)]
-
-### Baseline (Using Mean)
-    
-- Baseline RMSE: 27.83
-    
-
-- Selected features to input into models:
-    - features =  ['incidenceRate', 'povertyPercent', 'PctHS25_Over', 'PctBachDeg25_Over', 
-    'PctPublicCoverageAlone', 'PctHS18_24', 'PctUnemployed16_Over', 'PctPublicCoverage']
-    
-***
-
-## Models:
-
-
-### Model 1: Lasso + Lars
-
-
-Model 1 results:
-- RMSE for Lasso + Lars
-- Training/In-Sample:  27.83 
-- Validation/Out-of-Sample:  27.42
-- R2 Value: 0.0
-
-
-### Model 2 : OLS using LinearRegression
-
-
-Model 2 results:
-- RMSE for OLS using LinearRegression
-- Training/In-Sample:  20.25 
-- Validation/Out-of-Sample:  18.96
-- R2 Value: 0.47
-
-
-### Model 3 : Polynomial Model
-
-Model 3 results:
-- RMSE for Polynomial Model, degrees=2
-- Training/In-Sample:  19.11 
-- Validation/Out-of-Sample:  19.14
-- R2 Value: 0.53
-
-
-## Selecting the Best Model:
-
-### Use Table below as a template for all Modeling results for easy comparison:
-
-| Model | Validation | R2 |
-| ---- | ---- | ---- |
-| Baseline | 27.83 | 0.0 |
-| Lasso + Lars | 27.42 | 0.0 |
-| OLS using LinearRegression | 18.96 |  0.47 |
-| Polynomial Model | 19.14 | 0.53 |
-
-
-- {Polynomial Model} model performed the best
-
-
-## Testing the Model
-
-- Model Testing Results: RMSE 20.49, R2 0.46
-
-***
-
-## <a name="conclusion"></a>Conclusion:
-
-- Only 1/3 of the people diagnosed actually died.
-- The Mid-Aged bin has a slightly higher average deathrate then young or old does.
-- The red binned [22640, 34218.1] income has more counties with extreme levels of deathrate.
-- The blue binned (61494.5, 125635] income has a majority of their counties below the average deathrate.
-- Our RMSE value for our test dataset beat our baseline by 26%.
-
-#### In order to potentially reduce the deathrate in certain counties, we need to find a way to incentivise people in those lower income ranges to get checked more often. This can possibly be done through a public program of some sort. We can also spread more awareness to get checked in the first place.
-
-[[Back to top](#top)]
